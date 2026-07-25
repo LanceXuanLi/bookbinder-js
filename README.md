@@ -54,30 +54,17 @@ Snapshot of layout proof summary as of 2022-08-14
 
 ## Containerization
 
-### Production
+The repository publishes a multi-architecture image for `linux/amd64` and `linux/arm64` to `ghcr.io/lancexuanli/bookbinder-js`.
+The image is rebuilt after relevant changes on `main`, and each build runs the dependency audit, lint checks, and test suite first.
+The production image runs the static application with unprivileged nginx on port `8080`.
+Uploaded PDFs are processed inside the browser and are not stored by the container.
 
-We added an easy compose.yaml for building and hosting this applications' files using nginx.
+Run the image locally with:
 
-This nginx does not open any ports, expects to be proxied by some other external web server and may be omitted if not needed.
-
-If you require this nginx to open a port, feel free to add your own (docker-)compose.override.yaml, where you would open ports as needed, like so
-
-```yaml
-services:
-  bookbinder-nginx:
-    ports:
-      - '80:80'
+```shell
+docker run --rm -p 8080:8080 ghcr.io/lancexuanli/bookbinder-js:latest
 ```
 
-### Development
+Then open http://localhost:8080.
 
-If you need to run bookbinder-js in development mode, feel free to create your compose.override.yaml and overwrite the startup command - `npm run build` by default - and create the container with host network mode, which would look like this
-
-```yaml
-services:
-  bookbinder-app:
-    # environment:
-    #   BASE: "http://localhost" <-- can be adjusted to your environment
-    network_mode: 'host'
-    command: bash -c "cd /app && npm install && npm run dev"
-```
+The existing `compose.yaml` remains available for development and local source builds.

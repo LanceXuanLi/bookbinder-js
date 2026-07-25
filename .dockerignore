@@ -1,0 +1,7 @@
+.git
+.github
+__snapshots__
+dist
+docs
+node_modules
+pdf-test
